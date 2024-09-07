@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // fetch data  sheet 1
 function fetchVoltageCurrentData() {
-    const sheetId1 = '14g5GswUj6mj411o2dYOPghzJthp97hfz5DZvOU3O5Ww';
+    const sheetId = '14g5GswUj6mj411o2dYOPghzJthp97hfz5DZvOU3O5Ww';
     const voltageCurrentUrl = `https://docs.google.com/spreadsheets/d/${sheetId}/pub?output=csv`;
     
     fetch(voltageCurrentUrl)
@@ -30,7 +30,7 @@ function fetchVoltageCurrentData() {
 
 //  fetch data sheet2
 function fetchPowerData() {
-    const sheetId2 = '1sAMNYYz1C2wIRcYA9RqKjKGprR3Lu6DLK0xBm-Rg4EA'; 
+    const sheetId = '1sAMNYYz1C2wIRcYA9RqKjKGprR3Lu6DLK0xBm-Rg4EA'; 
 
     const powerDataUrl = `https://docs.google.com/spreadsheets/d/${sheetId}/pub?output=csv`;
     
