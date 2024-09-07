@@ -30,7 +30,7 @@ function fetchVoltageCurrentData() {
 
 //  fetch data sheet2
 function fetchPowerData() {
-    const sheetId = '1sAMNYYz1C2wIRcYA9RqKjKGprR3Lu6DLK0xBm-Rg4EA'; 
+    const sheetId2 = '1sAMNYYz1C2wIRcYA9RqKjKGprR3Lu6DLK0xBm-Rg4EA'; 
     const powerDataUrl = `https://docs.google.com/spreadsheets/d/${sheetId}/pub?output=csv`;
 
     fetch(powerDataUrl)
