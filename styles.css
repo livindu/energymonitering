@@ -13,12 +13,13 @@ body {
 header {
     background-color: #d3d3d3;
     color: black;
-    padding: em ;
+    padding: 1em; /* Corrected */
     text-align: center;
     display: flex;
     align-items: center;
     justify-content: center;
 }
+
 
 /* configuration of styles for the header img (logo) */
 header img {
@@ -139,60 +140,20 @@ h1, h2 {
 
 
 /* configuration of styles display chart */
- .chart-container {
-    position: relative; 
+.chart-container {
+    position: relative;
     width: 100%;
     max-width: 800px;
-    height: 400px; 
-    margin: 0 auto; 
+    height: 400px;
+    margin: 0 auto;
+    margin-bottom: 20px;
 }
-
 
 #powerChart {
     width: 100%;
     height: 100%;
 }
 
-/* Styles for the container and layout */
-.container {
-    display: flex;
-    flex-direction: row;
-    height: 100vh;
-}
-
-aside {
-    width: 200px;
-    background-color: #f0f0f0;
-    padding: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
-
-main {
-    flex: 1;
-    padding: 20px;
-}
-
-.chart-container {
-    width: 100%;
-    height: 400px;
-    margin-bottom: 20px;
-}
-
-/* Style for status boxes */
-.status {
-    display: flex;
-    justify-content: space-around;
-    margin-bottom: 20px;
-}
-
-.status-box {
-    background-color: #007bff;
-    color: white;
-    padding: 20px;
-    border-radius: 8px;
-    text-align: center;
-    width: 45%;
-}
 
 /* Style for the horizontal labels */
 .horizontal-labels {
