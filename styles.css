@@ -1,6 +1,4 @@
-
-
-/* configuration of styles for the page body */
+/* General page styles */
 body {
     font-family: Arial, sans-serif;
     margin: 0;
@@ -9,27 +7,24 @@ body {
     color: #333;
 }
 
-/* configuration of styles for the page header */
+/* Header styling */
 header {
     background-color: #d3d3d3;
     color: black;
-    padding: 1em; /* Corrected */
+    padding: 1em;
     text-align: center;
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
-
-/* configuration of styles for the header img (logo) */
 header img {
-    margin-right: 5px;
+    margin-right: 10px;
     width: 120px;
     height: 120px;
 }
 
-
-/* configuration of styles and alignment for the login page login box */
+/* Login page styling */
 .login-container {
     display: flex;
     justify-content: center;
@@ -72,23 +67,22 @@ header img {
     font-size: 1em;
 }
 
+/* Layout for the dashboard */
 .container {
     display: flex;
+    flex-direction: row;
     height: calc(100vh - 100px);
 }
 
-
-/* configuration of styles for the home page leftside button panel */
-
 aside {
-    background-color: #f0f0f0;
-    padding: 1em;
     width: 200px;
+    background-color: #f0f0f0;
+    padding: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
-    margin-top: 20px;
 }
 
 .btn {
@@ -101,19 +95,26 @@ aside {
     width: 100px;
 }
 
-
-/* configuration of styles for the page voltage and current display boxes */
+/* Main content area */
 main {
     flex-grow: 1;
-    padding: 2em ;
+    padding: 2em;
     background-color: #f9f9f9;
     display: flex;
     flex-direction: column;
     align-items: center;
     width: 100%;
-    min-height: 100vh;
 }
 
+/* Chart container styling */
+.chart-container {
+    width: 100%;
+    max-width: 800px;
+    height: 400px;
+    margin: 0 auto;
+}
+
+/* Status box styling */
 .status {
     display: flex;
     justify-content: space-around;
@@ -125,44 +126,7 @@ main {
     background-color: #1E90FF;
     color: white;
     padding: 20px;
-    border-radius: 5px;
-    flex: 1;
-    margin: 0 10px;
+    border-radius: 8px;
     text-align: center;
-}
-
-/* configuration of styles for heading h1 and h2 used in website */
-h1, h2 {
-    margin: 5px;
-    align-items: center;
-
-}
-
-
-/* configuration of styles display chart */
-.chart-container {
-    position: relative;
-    width: 100%;
-    max-width: 800px;
-    height: 400px;
-    margin: 0 auto;
-    margin-bottom: 20px;
-}
-
-#powerChart {
-    width: 100%;
-    height: 100%;
-}
-
-
-/* Style for the horizontal labels */
-.horizontal-labels {
-    display: flex;
-    justify-content: space-around;
-    margin-top: 20px;
-}
-
-.horizontal-labels span {
-    font-weight: bold;
-    font-size: 1.1em;
+    width: 45%;
 }
