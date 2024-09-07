@@ -1,0 +1,54 @@
+<!-- Home page of the energy monitoring website-->
+<html>
+<!-- initialize html -->
+<head>
+    <!-- Home page title -->
+    <meta charset="UTF-8"> <!-- meta data used by the web search engine -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Energy Monitoring System</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> <!-- link Chart.js library for charts -->
+</head>
+
+<!-- Home page body -->
+<body>
+    <!-- addition of energy monitoring website logo -->
+    <header>
+        <img src="logo.png" alt="Logo" id="logo">
+        <center><h1>Energy Monitoring System</h1></center>
+    </header>
+
+    <div class="container"> <!-- container class -->
+        <aside>
+            <button class="btn" onclick="logout()">Logout</button> <!-- logout button which redirects to the login page when clicked -->
+        </aside>
+
+        <main> <!-- primary content of the website -->
+            <!-- Status boxes for voltage and current values display -->
+            <div class="status">
+                <div class="status-box">
+                    <h2>Voltage</h2>
+                    <p id="voltage">0.0 V</p> 
+                </div>
+                <div class="status-box">
+                    <h2>Current</h2>
+                    <p id="current">0.0 A</p>
+                </div>
+            </div>
+
+            <!-- Power (W) over time (hours) graph for displaying power consumption -->
+            <div class="chart-container">
+                <center><h2 id="chartTitle">Power Consumption </h2></center>
+                
+                <canvas id="powerChart" width="400" height="200"></canvas>
+
+            </div>
+
+            
+        </main>
+    </div>
+
+    <script src="script.js"></script> <!-- link JavaScript file -->
+</body> <!-- end body tag -->
+</html> <!-- end html tag -->
+

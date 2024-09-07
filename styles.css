@@ -1,0 +1,207 @@
+
+
+/* configuration of styles for the page body */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f0f0f0;
+    color: #333;
+}
+
+/* configuration of styles for the page header */
+header {
+    background-color: #d3d3d3;
+    color: black;
+    padding: em ;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* configuration of styles for the header img (logo) */
+header img {
+    margin-right: 5px;
+    width: 120px;
+    height: 120px;
+}
+
+
+/* configuration of styles and alignment for the login page login box */
+.login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: calc(100vh - 100px);
+    background-color: #f0f0f0;
+}
+
+.login-box {
+    background-color: #1E90FF;
+    padding: 2em;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    width: 300px;
+}
+
+.login-box h2 {
+    margin-bottom: 1em;
+    color: white;
+}
+
+.login-box input {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: none;
+    border-radius: 5px;
+    font-size: 1em;
+}
+
+.login-box button {
+    background-color: #32CD32;
+    color: white;
+    border: none;
+    padding: 10px;
+    width: 100%;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1em;
+}
+
+.container {
+    display: flex;
+    height: calc(100vh - 100px);
+}
+
+
+/* configuration of styles for the home page leftside button panel */
+
+aside {
+    background-color: #f0f0f0;
+    padding: 1em;
+    width: 200px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    margin-top: 20px;
+}
+
+.btn {
+    background-color: #32CD32;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    margin: 10px 0;
+    cursor: pointer;
+    width: 100px;
+}
+
+
+/* configuration of styles for the page voltage and current display boxes */
+main {
+    flex-grow: 1;
+    padding: 2em ;
+    background-color: #f9f9f9;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    min-height: 100vh;
+}
+
+.status {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 20px;
+    width: 100%;
+}
+
+.status-box {
+    background-color: #1E90FF;
+    color: white;
+    padding: 20px;
+    border-radius: 5px;
+    flex: 1;
+    margin: 0 10px;
+    text-align: center;
+}
+
+/* configuration of styles for heading h1 and h2 used in website */
+h1, h2 {
+    margin: 5px;
+    align-items: center;
+
+}
+
+
+/* configuration of styles display chart */
+ .chart-container {
+    position: relative; 
+    width: 100%;
+    max-width: 800px;
+    height: 400px; 
+    margin: 0 auto; 
+}
+
+
+#powerChart {
+    width: 100%;
+    height: 100%;
+}
+
+/* Styles for the container and layout */
+.container {
+    display: flex;
+    flex-direction: row;
+    height: 100vh;
+}
+
+aside {
+    width: 200px;
+    background-color: #f0f0f0;
+    padding: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+main {
+    flex: 1;
+    padding: 20px;
+}
+
+.chart-container {
+    width: 100%;
+    height: 400px;
+    margin-bottom: 20px;
+}
+
+/* Style for status boxes */
+.status {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 20px;
+}
+
+.status-box {
+    background-color: #007bff;
+    color: white;
+    padding: 20px;
+    border-radius: 8px;
+    text-align: center;
+    width: 45%;
+}
+
+/* Style for the horizontal labels */
+.horizontal-labels {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 20px;
+}
+
+.horizontal-labels span {
+    font-weight: bold;
+    font-size: 1.1em;
+}
