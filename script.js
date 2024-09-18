@@ -73,11 +73,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 options: {
                     scales: {
                         x: {
+                            
                             title: { display: true, text: 'Time (24 Hours)' }
                         },
                         y: {
                             min: 0,
-                            max: 230,
+                            max: 8000,
                             title: { display: true, text: 'Power (W)' }
                         }
                     }
