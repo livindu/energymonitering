@@ -1,5 +1,3 @@
-
-
 const apiKey = 'AIzaSyCJUpx3d2aRxgOnbbB73WBpcZ1oI2YAauc'; 
 
 const sheetId1 = '14g5GswUj6mj411o2dYOPghzJthp97hfz5DZvOU3O5Ww'; 
@@ -41,8 +39,15 @@ document.addEventListener('DOMContentLoaded', function() {
                 const device4 = [];
 
                 rows.forEach(row => {
-                    const [time, main, dev1, dev2, dev3, dev4] = row.split(',');
-                    labels.push(time);
+                    const [timeMs, main, dev1, dev2, dev3, dev4] = row.split(',');
+                    const time = new Date(parseInt(timeMs)); // Convert milliseconds to Date
+
+                    // Convert Date to a 24-hour format
+                    const hours = time.getUTCHours();
+                    const minutes = time.getUTCMinutes();
+                    const formattedTime = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
+
+                    labels.push(formattedTime);
                     mainPower.push(parseFloat(main));
                     device1.push(parseFloat(dev1));
                     device2.push(parseFloat(dev2));
@@ -73,8 +78,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 options: {
                     scales: {
                         x: {
-                            
-                            title: { display: true, text: 'Time (24 Hours)' }
+                            title: { display: true, text: 'Time (24 Hours)' },
+                            ticks: {
+                                callback: (value) => {
+                                    // Format x-axis labels as HH:MM
+                                    return value;
+                                }
+                            }
                         },
                         y: {
                             min: 0,
@@ -111,3 +121,4 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 });
+
