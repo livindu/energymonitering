@@ -88,7 +88,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         },
                         y: {
                             min: 0,
-                            max: 8000,
+                            max: 3000,
                             title: { display: true, text: 'Power (W)' }
                         }
                     }
