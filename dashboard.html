@@ -15,12 +15,15 @@
     <!-- addition of energy monitoring website logo -->
     <header>
         <img src="logo.png" alt="Logo" id="logo">
+        <div id="dateDisplay" style="position: absolute; top: 20px; left: 20px; font-weight: bold;"></div>
         <center><h1>Energy Monitoring System</h1></center>
     </header>
 
     <div class="container"> <!-- container class -->
         <aside>
-            <button class="btn" onclick="logout()">Logout</button> <!-- logout button which redirects to the login page when clicked -->
+            <button class="btn" id="mainPowerBtn">Main Power</button>
+            <button class="btn" id="devicePowerBtn">Device Power</button>
+            <button class="btn" onclick="logout()">Logout</button> 
         </aside>
 
         <main> <!-- primary content of the website -->
