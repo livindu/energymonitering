@@ -1,26 +1,48 @@
 const apiKey = 'AIzaSyCJUpx3d2aRxgOnbbB73WBpcZ1oI2YAauc'; 
 
-const sheetId1 = '14g5GswUj6mj411o2dYOPghzJthp97hfz5DZvOU3O5Ww'; 
+ 
 const sheetId2 = '1sAMNYYz1C2wIRcYA9RqKjKGprR3Lu6DLK0xBm-Rg4EA'; 
 
+
+    // Call functions to fetch data
+
+
+
+
 document.addEventListener('DOMContentLoaded', function() {
-    // Fetch data for voltage and current
-    function fetchVoltageCurrentData() {
-        const sheetId1 = '14g5GswUj6mj411o2dYOPghzJthp97hfz5DZvOU3O5Ww';
-        const voltageCurrentUrl = `https://docs.google.com/spreadsheets/d/${sheetId1}/pub?output=csv`;
+    // Establish WebSocket connection
+    const ws = new WebSocket('ws://lucky-shell-honeycrisp.glitch.me/');
 
-        fetch(voltageCurrentUrl)
-            .then(response => response.text())
-            .then(data => {
-                const [header, values] = data.split('\n');
-                const [voltage, current] = values.split(',');
+    ws.onopen = function() {
+        console.log("WebSocket connection established.");
+    };
 
-                // Display voltage and current in boxes
-                document.getElementById('voltage').innerText = `${voltage} V`;
-                document.getElementById('current').innerText = `${current} A`;
-            })
-            .catch(error => console.error('Error fetching voltage/current data:', error));
-    }
+    ws.onmessage = function(event) {
+        const data = JSON.parse(event.data);
+        const { date, time, power, voltage, current } = data;
+
+        // Update Voltage and Current boxes
+        document.getElementById('voltage').innerText = `${voltage} V`;
+        document.getElementById('current').innerText = `${current} A`;
+
+        // Display Date in top left
+        document.getElementById('dateDisplay').innerText = `Date: ${date}`;
+    };
+
+    ws.onclose = function() {
+        console.log("WebSocket connection closed.");
+    };
+
+    ws.onerror = function(error) {
+        console.error("WebSocket error:", error);
+    };
+
+
+document.getElementById('mainButton').addEventListener('click', function() {
+    document.getElementById('chartTitle').innerText = 'Power Consumption';
+    document.getElementById('powerChart').style.display = 'block'; // Ensure the chart is visible
+});
+
 
     // Fetch power data for the chart
     function fetchPowerData() {
@@ -32,14 +54,14 @@ document.addEventListener('DOMContentLoaded', function() {
             .then(data => {
                 const rows = data.split('\n').slice(1);
                 const labels = [];
-                const mainPower = [];
+                const device0 = [];
                 const device1 = [];
                 const device2 = [];
                 const device3 = [];
                 const device4 = [];
 
                 rows.forEach(row => {
-                    const [timeMs, main, dev1, dev2, dev3, dev4] = row.split(',');
+                    const [timeMs, dev0, dev1, dev2, dev3, dev4] = row.split(',');
                     const time = new Date(parseInt(timeMs)); // Convert milliseconds to Date
 
                     // Convert Date to a 24-hour format
@@ -48,7 +70,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     const formattedTime = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
 
                     labels.push(formattedTime);
-                    mainPower.push(parseFloat(main));
+                    mainPower.push(parseFloat(dev0));
                     device1.push(parseFloat(dev1));
                     device2.push(parseFloat(dev2));
                     device3.push(parseFloat(dev3));
@@ -68,7 +90,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 data: {
                     labels: labels,
                     datasets: [
-                        { label: 'Main Power', borderColor: 'rgba(0, 128, 128, 1)', data: mainPower },
+                        { label: 'Device 0', borderColor: 'rgba(0, 128, 128, 1)', data: device0 },
                         { label: 'Device 1', borderColor: 'rgba(255, 99, 132, 1)', data: device1 },
                         { label: 'Device 2', borderColor: 'rgba(54, 162, 235, 1)', data: device2 },
                         { label: 'Device 3', borderColor: 'rgba(255, 206, 86, 1)', data: device3 },
@@ -99,14 +121,13 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Call functions to fetch data
-    fetchVoltageCurrentData();
-    fetchPowerData();
+
+
 
     // Logout function
-    function logout() {
+    document.getElementById('logoutButton').addEventListener('click', function() {
         window.location.href = 'index.html';
-    }
+    });
 
     // Login form functionality
     document.getElementById('loginForm').addEventListener('submit', function(event) {
@@ -121,4 +142,3 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 });
-
