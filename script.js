@@ -24,7 +24,7 @@ const sheetId = '1sAMNYYz1C2wIRcYA9RqKjKGprR3Lu6DLK0xBm-Rg4EA';
     
 document.addEventListener('DOMContentLoaded', function() {
     // WebSocket connection for main power (ESP32)
-    const ws = new WebSocket('ws://lucky-shell-honeycrisp.glitch.me/');
+    const ws = new WebSocket('wss://lucky-shell-honeycrisp.glitch.me/');
     let mainPowerChart;
     let devicePowerChart;
 
