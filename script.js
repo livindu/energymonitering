@@ -114,4 +114,4 @@ document.addEventListener('DOMContentLoaded', function(){
             window.location.href = 'dashboard.html'; // Ensure the file path is correct
         }else{
             alert('Invalid User Credentials');
-        }});
+        }})
