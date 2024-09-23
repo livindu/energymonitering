@@ -67,7 +67,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     ws.onmessage = function(event) {
         const data = JSON.parse(event.data);
-        const { date, time, power, voltage, current } = data;
+       const { date, time, voltage, current, power } = data;
 
         // Display the date from the WebSocket (ESP32)
         document.getElementById('dateDisplay').innerText = date;
