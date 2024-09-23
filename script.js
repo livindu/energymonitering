@@ -1,9 +1,5 @@
 const apiKey = 'AIzaSyCJUpx3d2aRxgOnbbB73WBpcZ1oI2YAauc'; 
-
- 
 const sheetId2 = '1sAMNYYz1C2wIRcYA9RqKjKGprR3Lu6DLK0xBm-Rg4EA'; 
-
-
 
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -26,14 +22,16 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('dateDisplay').innerText = `Date: ${date}`;
     };
 
-    ws.onclose = function() {
-        console.log("WebSocket connection closed.");
-    };
+socket.onerror = function(event) {
+    console.error("WebSocket error observed:", event);
+    alert("Failed to connect to the ESP32 WebSocket server. Please check if the ESP32 is powered on.");
 
-    ws.onerror = function(error) {
-        console.error("WebSocket error:", error);
-    };
+};
 
+socket.onclose = function(event) {
+    console.log("WebSocket connection closed");
+    alert("Connection to ESP32 was lost. Please ensure it is running.");
+};
 
 
 document.getElementById('mainPowerBtn').addEventListener('click', function() {
@@ -127,14 +125,6 @@ function updatePowerChart(labels, device0, device1, device2, device3, device4) {
 }
 
 
-
-
-    // Logout function
-   document.getElementById('logoutBtn').addEventListener('click', function() {
-    window.location.href = 'index.html';
-});
-
-    // Login form functionality
 document.getElementById('loginForm').addEventListener('submit', function(event) {
     event.preventDefault();
     const username = document.getElementById('username').value;
@@ -146,3 +136,6 @@ document.getElementById('loginForm').addEventListener('submit', function(event) 
         alert('Invalid User Credentials');
     }
 });
+
+document.getElementById('logoutBtn').addEventListener('click', function() {
+    window.location.href = 'index.html';});
