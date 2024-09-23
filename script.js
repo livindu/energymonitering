@@ -102,16 +102,20 @@ document.addEventListener('DOMContentLoaded', function(){
                     title: { display: true, text: 'Power (W)'}
                 }}}});}
 
-   document.getElementById('logoutBtn').addEventListener('click', function(){
-        window.location.href = 'index.html';});
-    
-    document.getElementById('loginForm').addEventListener('submit', function(event){
-        event.preventDefault();
-        const username = document.getElementById('username').value;
-        const password = document.getElementById('password').value;
-        
-        if (username === 'admin' && password === 'admin'){
-            window.location.href = 'dashboard.html'; // Ensure the file path is correct
-        }else{
-            alert('Invalid User Credentials');
-        }})
+// Logout function
+function logout() {
+    window.location.href = 'index.html';
+}
+
+// login form 
+document.getElementById('loginForm').addEventListener('submit', function(event) {
+    event.preventDefault();
+    const username = document.getElementById('username').value;
+    const password = document.getElementById('password').value;
+
+    if (username === 'admin' && password === 'admin') {
+        window.location.href = 'dashboard.html';
+    } else {
+        alert('Invalid User Credentials');
+    }
+});
