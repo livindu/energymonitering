@@ -13,17 +13,18 @@
 <!-- Home page body -->
 <body>
     <!-- addition of energy monitoring website logo -->
-    <header>
+    <header>        
         <img src="logo.png" alt="Logo" id="logo">
-        <div id="dateDisplay" style="position: absolute; top: 20px; left: 20px; font-weight: bold;"></div>
         <center><h1>Energy Monitoring System</h1></center>
+        <div id="dateDisplay" style="position: absolute; top: 20px; left: 20px; font-weight: bold;"></div>
     </header>
 
     <div class="container"> <!-- container class -->
         <aside>
             <button class="btn" id="mainPowerBtn">Main Power</button>
             <button class="btn" id="devicePowerBtn">Device Power</button>
-            <button class="btn" id="logoutBtn">Logout</button> 
+            <button class="btn" id="logoutBtn">Logout</button>
+
         </aside>
 
         <main> <!-- primary content of the website -->
@@ -40,10 +41,15 @@
             </div>
 
             <!-- Power (W) over time (hours) graph for displaying power consumption -->
-            <div class="chart-container">                           
-                <canvas id="powerChart" width="500" height="300"></canvas>
+<div class="chart-container">
+    <center><h2 id="mainPowerChartTitle">Main Power Consumption</h2></center>
+    <canvas id="mainPowerChart" width="500" height="300"></canvas>
+</div>
 
-            </div>
+<div class="chart-container">
+    <center><h2 id="devicePowerChartTitle" style="display:none"> Device Power Consumption</h2></center>
+    <canvas id="devicePowerChart" width="500" height="300" style="display:none;"></canvas> 
+</div>
 
             
         </main>
