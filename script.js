@@ -70,21 +70,24 @@ document.addEventListener('DOMContentLoaded', function() {
         const { date, time, voltage, current, power } = data;
 
  
-        document.getElementById('dateDisplay').innerText = date;
-
-   
+        document.getElementById('dateDisplay').innerText = date;   
         document.getElementById('voltage').innerText = `${voltage} V`;
         document.getElementById('current').innerText = `${current} A`;
 
 
-        const timeObj = new Date(time);
-        const formattedTime = `${timeObj.getHours().toString().padStart(2, '0')}:${timeObj.getMinutes().toString().padStart(2, '0')}`;
+        // Convert ESP32 time (formatted as HH.mm.ss) to a 24-hour format
+        const [hours, minutes, seconds] = time.split('.').map(Number);
+        const formattedTime = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
 
+        // Update chart with formatted time
     
         if (mainPowerChart) {
-            mainPowerChart.data.labels.push(formattedTime);
-            mainPowerChart.data.datasets[0].data.push(power); // Add the power data point
-            mainPowerChart.update();
+            // Check if the chart already contains this time to avoid duplicate entries
+            if (!mainPowerChart.data.labels.includes(formattedTime)) {
+                mainPowerChart.data.labels.push(formattedTime);
+                mainPowerChart.data.datasets[0].data.push(power);
+                mainPowerChart.update();
+            }
         }
     };
 
