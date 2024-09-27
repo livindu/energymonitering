@@ -1,4 +1,4 @@
-
+/* General page styles */
 body {
     font-family: Arial, sans-serif;
     margin: 0;
@@ -7,8 +7,7 @@ body {
     color: #333;
 }
 
-
-
+/* Header styling */
 header {
     background-color: #d3d3d3;
     color: black;
@@ -116,18 +115,22 @@ main {
     margin: 0 auto;
 }
 
-/* Status box styling */
+/* Container for Status Box */
 .status {
-    display: flex;
-    justify-content: space-around;
-    margin-bottom: 20px;
-    width: 100%;
+    display: flex;              /* Aligns the status boxes in a row */
+    justify-content: space-around;  /* Distributes space evenly around status boxes */
+    margin-bottom: 30px;        /* Adds space below the status container */
+    width: 100%;                /* Ensures the status container takes full width */
 }
+
+/* Styling for Individual Status Box */
 .status-box {
-    background-color: #1E90FF;
-    color: white;
-    padding: 10px;
-    border-radius: 8px;
-    text-align: center;
-    width: 45%;
+    background-color: #1E90FF;  /* Sets the background color to DodgerBlue */
+    color: white;               /* Sets the text color to white */
+    padding: 20px;              /* Adds space inside the box */
+    border-radius: 25px;        /* Rounds the corners of the box */
+    text-align: center;         /* Centers the text inside the box */
+    width: 55%;                 /* Sets the width of each status box */
 }
+
+
