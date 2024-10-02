@@ -19,10 +19,10 @@ loginForm?.addEventListener('submit', function (event) {
     }
 });
 
-document.addEventListener('DOMContentLoaded', function () {
-    const ws = new WebSocket('wss://lucky-shell-honeycrisp.glitch.me/');
+document.addEventListener('DOMContentLoaded', function() {
+    const ws = new WebSocket('ws://lucky-shell-honeycrisp.glitch.me/');
     let mainPowerChart;
-    const mainPowerData = []; // Store all power data
+    let mainPowerData = Array(24).fill(null); // Initialize an array to hold 24 hours of data
     const timeLabels = []; // Store all time labels
 
     const mainPowerBtn = document.getElementById('mainPowerBtn');
@@ -32,15 +32,15 @@ document.addEventListener('DOMContentLoaded', function () {
     const mainPowerCanvas = document.getElementById('mainPowerChart');
     const devicePowerCanvas = document.getElementById('devicePowerChart');
 
-    // Initialize a fixed time range for 0 to 60 minutes
+    // Initialize a constant 24-hour time range
     function initializeTimeLabels() {
-        for (let i = 0; i <= 60; i++) {
-            timeLabels.push(i.toString()); // Push 0 to 60 minutes
+        for (let i = 0; i < 24; i++) {
+            const hourLabel = `${i.toString().padStart(2, '0')}:00`;
+            timeLabels.push(hourLabel);
         }
     }
 
     if (mainPowerChartTitle && mainPowerCanvas && devicePowerChartTitle && devicePowerCanvas) {
-        // Initially display the main power chart
         mainPowerChartTitle.style.display = 'block';
         mainPowerCanvas.style.display = 'block';
         devicePowerChartTitle.style.display = 'none';
@@ -59,82 +59,78 @@ document.addEventListener('DOMContentLoaded', function () {
             devicePowerChartTitle.style.display = 'block';
             devicePowerCanvas.style.display = 'block';
 
-            fetchDevicePowerData(); // Fetch device power data when button is clicked
+            fetchDevicePowerData();
         });
     }
 
-    ws.onopen = function () {
+    ws.onopen = function() {
         console.log("WebSocket connection established.");
     };
 
-    ws.onmessage = function (event) {
+    ws.onmessage = function(event) {
         const data = JSON.parse(event.data);
         console.log('Received data:', data); // Log received data for debugging
         const { date, time, voltage, current, power } = data;
 
-        // Update the voltage and current displays
-        document.getElementById('dateDisplay').innerText = date;
+        document.getElementById('dateDisplay').innerText = date;   
         document.getElementById('voltage').innerText = `${voltage} V`;
         document.getElementById('current').innerText = `${current} A`;
         document.getElementById('power').innerText = `${power} W`;
 
-        // Convert ESP32 time (formatted as HH:mm:ss) to a timestamp for 24-hour format
         const [hoursStr, minutesStr] = time.split(':');
         let hours = parseInt(hoursStr);
         const minutes = parseInt(minutesStr);
 
         if (!isNaN(hours) && !isNaN(minutes)) {
-            // Calculate the elapsed time in minutes since the data was received
-            const now = new Date();
-            const elapsedTimeInMinutes = Math.floor((now - new Date(now.getFullYear(), now.getMonth(), now.getDate(), hours, minutes)) / 60000);
+            const currentIndex = hours % 24; // Calculate the index in the 24-hour array
 
-            // Push the power data to the array
-            mainPowerData.push(power);
-
-            // Ensure the length of data arrays does not exceed 61 (0 to 60)
-            if (mainPowerData.length > 61) {
-                mainPowerData.shift(); // Remove the oldest entry
-            }
+            mainPowerData[currentIndex] = power; // Update power at the corresponding hour
 
             // Update the chart data
-            mainPowerChart.data.labels = timeLabels; // Always keep labels from 0 to 60
-            mainPowerChart.data.datasets[0].data = mainPowerData.slice(-61); // Only keep the latest 61 data points
-            mainPowerChart.update(); // Redraw chart
+            mainPowerChart.data.datasets[0].data = mainPowerData;
+            mainPowerChart.update();
+
+            // Reset the array every 24 hours
+            if (hours === 0 && minutes === 0) {
+                mainPowerData = Array(24).fill(null); // Clear previous data
+            }
         } else {
             console.error(`Invalid time format received: ${time}`); // Log if hours or minutes are NaN
         }
     };
 
-    ws.onclose = function () {
-        console.log("WebSocket connection closed.");
-    };
+   ws.onclose = function() {
+    console.log("WebSocket connection closed. Reconnecting...");
+    setTimeout(function() {
+        ws = new WebSocket('ws://lucky-shell-honeycrisp.glitch.me/');
+    }, 1000); // Reconnect after 1 second
+};
 
-    ws.onerror = function (error) {
+    ws.onerror = function(error) {
         console.error("WebSocket error:", error);
     };
 
-    // Initialize the main power chart
     function initializeMainPowerChart() {
         const ctx = document.getElementById('mainPowerChart').getContext('2d');
-
+        
         // Initialize time labels
         initializeTimeLabels();
 
         mainPowerChart = new Chart(ctx, {
             type: 'line',
             data: {
-                labels: timeLabels, // Initialize with time labels from 0 to 60 minutes
+                labels: timeLabels, // Fixed time labels for 24 hours
                 datasets: [{
                     label: 'Main Power (W)',
                     borderColor: 'rgba(0, 128, 128, 1)',
                     fill: false,
-                    data: [] // Initialize with empty data
+                    data: mainPowerData // Use mainPowerData for continuous updating
                 }]
             },
             options: {
                 scales: {
                     x: {
-                        title: { display: true, text: 'Time (Minutes)' },
+                        title: { display: true, text: 'Time (24 Hours)' },
                         ticks: {
                             autoSkip: false // Ensure no labels are skipped
                         }
@@ -191,7 +187,7 @@ document.addEventListener('DOMContentLoaded', function () {
     function updateDevicePowerChart(labels, device0, device1, device2, device3, device4) {
         const ctx = document.getElementById('devicePowerChart').getContext('2d');
         if (devicePowerChart) {
-            devicePowerChart.destroy();
+            devicePowerChart.destroy(); 
         }
         devicePowerChart = new Chart(ctx, {
             type: 'line',
@@ -208,9 +204,9 @@ document.addEventListener('DOMContentLoaded', function () {
             options: {
                 scales: {
                     x: {
-                        title: { display: true, text: 'Time (Minutes)' },
+                        title: { display: true, text: 'Time (24 Hours)' },
                         ticks: {
-                            autoSkip: false // Ensure no labels are skipped
+                            autoSkip: false
                         }
                     },
                     y: {
