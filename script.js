@@ -20,7 +20,7 @@ loginForm?.addEventListener('submit', function (event) {
 });
 
 document.addEventListener('DOMContentLoaded', function() {
-    const ws = new WebSocket('ws://lucky-shell-honeycrisp.glitch.me/');
+    const ws = new WebSocket('wss://lucky-shell-honeycrisp.glitch.me/');
     let mainPowerChart;
     let mainPowerData = Array(24).fill(null); // Initialize an array to hold 24 hours of data
     const timeLabels = []; // Store all time labels
