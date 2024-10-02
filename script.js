@@ -20,9 +20,9 @@ loginForm?.addEventListener('submit', function (event) {
 });
 
 document.addEventListener('DOMContentLoaded', function() {
-    const ws = new WebSocket('wss://lucky-shell-honeycrisp.glitch.me/');
+    const ws = new WebSocket('ws://lucky-shell-honeycrisp.glitch.me/');
     let mainPowerChart;
-    let mainPowerData = Array(24).fill(null); // Initialize an array to hold 24 hours of data
+    const mainPowerData = Array(1440).fill(null); // Initialize an array to hold 24 hours of data
     const timeLabels = []; // Store all time labels
 
     const mainPowerBtn = document.getElementById('mainPowerBtn');
@@ -32,11 +32,13 @@ document.addEventListener('DOMContentLoaded', function() {
     const mainPowerCanvas = document.getElementById('mainPowerChart');
     const devicePowerCanvas = document.getElementById('devicePowerChart');
 
-    // Initialize a constant 24-hour time range
+    // Function to generate time labels (00:00 to 23:59)
     function initializeTimeLabels() {
         for (let i = 0; i < 24; i++) {
-            const hourLabel = `${i.toString().padStart(2, '0')}:00`;
-            timeLabels.push(hourLabel);
+            for (let j = 0; j < 60; j++) {
+                const hourLabel = `${i.toString().padStart(2, '0')}:${j.toString().padStart(2, '0')}`;
+                timeLabels.push(hourLabel);
+            }
         }
     }
 
@@ -78,11 +80,11 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('power').innerText = `${power} W`;
 
         const [hoursStr, minutesStr] = time.split(':');
-        let hours = parseInt(hoursStr);
+        const hours = parseInt(hoursStr);
         const minutes = parseInt(minutesStr);
 
         if (!isNaN(hours) && !isNaN(minutes)) {
-            const currentIndex = hours % 24; // Calculate the index in the 24-hour array
+            const currentIndex = hours * 60 + minutes; // Calculate the index in the 24-hour array
 
             mainPowerData[currentIndex] = power; // Update power at the corresponding hour
 
@@ -120,28 +122,38 @@ document.addEventListener('DOMContentLoaded', function() {
             type: 'line',
             data: {
                 labels: timeLabels, // Fixed time labels for 24 hours
-                datasets: [{
-                    label: 'Main Power (W)',
-                    borderColor: 'rgba(0, 128, 128, 1)',
-                    fill: false,
-                    data: mainPowerData // Use mainPowerData for continuous updating
-                }]
+              datasets: [{
+    label: 'Main Power (W)',
+    borderColor: 'rgba(0, 128, 128, 1)',
+    fill: false,
+    data: mainPowerData.map(value => value !== null ? value : 0), // Replace null with 0
+    pointRadius: 2, // Size of data points on the line
+    pointBackgroundColor: 'rgba(0, 128, 128, 1)', // Color of points
+    lineTension: 0.3,
+    borderWidth: 2
+}]
             },
             options: {
                 scales: {
                     x: {
-                        title: { display: true, text: 'Time (24 Hours)' },
+                        title: { display: true, text: 'Time (Hours)'  },
                         ticks: {
-                            autoSkip: false // Ensure no labels are skipped
+                            autoSkip: true, // Ensure no labels are skipped
+                            maxTicksLimit: 12 
                         }
                     },
                     y: {
                         min: 0,
                         max: 1500,
-                        title: { display: true, text: 'Power (W)' }
+                   title: { display: true, text: 'Power (W)' },
+                    ticks: {
+                        stepSize: 100 // Define step size for y-axis ticks
                     }
                 }
-            }
+            },
+            responsive: true, // Ensure the chart resizes with the window
+            maintainAspectRatio: false // Allow the chart to fill the container
+        }
         });
 
         console.log('Main power chart initialized.');
