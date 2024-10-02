@@ -184,7 +184,7 @@ document.addEventListener('DOMContentLoaded', function() {
             .catch(error => console.error('Error fetching power data:', error));
     }
 
-let devicePowerChart = null; 
+let devicePowerChart = null; // Initialize devicePowerChart as null
 
 function updateDevicePowerChart(labels, device0, device1, device2, device3, device4) {
     const ctx = document.getElementById('devicePowerChart').getContext('2d');
@@ -222,3 +222,5 @@ function updateDevicePowerChart(labels, device0, device1, device2, device3, devi
     });
     console.log('Device power chart updated.');
 }
+
+});
