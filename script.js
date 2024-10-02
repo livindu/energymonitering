@@ -20,7 +20,7 @@ loginForm?.addEventListener('submit', function (event) {
 });
 
 document.addEventListener('DOMContentLoaded', function() {
-    const ws = new WebSocket('wss://lucky-shell-honeycrisp.glitch.me/');
+    const ws = new WebSocket('ws://lucky-shell-honeycrisp.glitch.me/');
     let mainPowerChart;
     let mainPowerData = Array(24).fill(null); // Initialize an array to hold 24 hours of data
     const timeLabels = []; // Store all time labels
@@ -184,37 +184,41 @@ document.addEventListener('DOMContentLoaded', function() {
             .catch(error => console.error('Error fetching power data:', error));
     }
 
-    function updateDevicePowerChart(labels, device0, device1, device2, device3, device4) {
-        const ctx = document.getElementById('devicePowerChart').getContext('2d');
-        if (devicePowerChart) {
-            devicePowerChart.destroy(); 
-        }
-        devicePowerChart = new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: labels,
-                datasets: [
-                    { label: 'Device 0', borderColor: 'rgba(0, 128, 128, 1)', data: device0, fill: false },
-                    { label: 'Device 1', borderColor: 'rgba(128, 0, 128, 1)', data: device1, fill: false },
-                    { label: 'Device 2', borderColor: 'rgba(0, 128, 0, 1)', data: device2, fill: false },
-                    { label: 'Device 3', borderColor: 'rgba(128, 128, 0, 1)', data: device3, fill: false },
-                    { label: 'Device 4', borderColor: 'rgba(0, 0, 128, 1)', data: device4, fill: false },
-                ]
-            },
-            options: {
-                scales: {
-                    x: {
-                        title: { display: true, text: 'Time (24 Hours)' },
-                        ticks: {
-                            autoSkip: false
-                        }
-                    },
-                    y: {
-                        title: { display: true, text: 'Power (W)' }
+let devicePowerChart = null; 
+
+function updateDevicePowerChart(labels, device0, device1, device2, device3, device4) {
+    const ctx = document.getElementById('devicePowerChart').getContext('2d');
+    
+    // Check if the chart exists before destroying it
+    if (devicePowerChart) {
+        devicePowerChart.destroy(); 
+    }
+
+    devicePowerChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [
+                { label: 'Device 0', borderColor: 'rgba(0, 128, 128, 1)', data: device0, fill: false },
+                { label: 'Device 1', borderColor: 'rgba(128, 0, 128, 1)', data: device1, fill: false },
+                { label: 'Device 2', borderColor: 'rgba(0, 128, 0, 1)', data: device2, fill: false },
+                { label: 'Device 3', borderColor: 'rgba(128, 128, 0, 1)', data: device3, fill: false },
+                { label: 'Device 4', borderColor: 'rgba(0, 0, 128, 1)', data: device4, fill: false },
+            ]
+        },
+        options: {
+            scales: {
+                x: {
+                    title: { display: true, text: 'Time (24 Hours)' },
+                    ticks: {
+                        autoSkip: false
                     }
+                },
+                y: {
+                    title: { display: true, text: 'Power (W)' }
                 }
             }
-        });
-        console.log('Device power chart updated.');
-    }
-});
+        }
+    });
+    console.log('Device power chart updated.');
+}
