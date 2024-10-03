@@ -117,24 +117,31 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 
+// Function to send data to Google Sheet
 function saveDataToGoogleSheet(dataArray) {
-        const apiUrl = 'https://script.google.com/macros/s/AKfycbxx_bzpQemX-iiA9X1LnZVy6IGEM72IxInVZQ_4N_98c7Z6hi51IxYrmoFkxNPqnTNEXA/exec';
+   const apiUrl = 'https://script.google.com/macros/s/AKfycbxx_bzpQemX-iiA9X1LnZVy6IGEM72IxInVZQ_4N_98c7Z6hi51IxYrmoFkxNPqnTNEXA/exec';
                 
-        fetch(apiUrl, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(dataArray),
-        })
-        .then(response => response.json())
-        .then(data => {
-            console.log('Data saved to Google Sheet:', data);
-        })
-        .catch(error => {
-            console.error('Error saving data to Google Sheet:', error);
-        });
-    }
+    console.log('Sending data:', dataArray);  // Debugging line to verify the data being sent
+
+    fetch(apiUrl, {
+        method: 'POST',  // Use POST method to send data
+        headers: {
+            'Content-Type': 'application/json',  // Sending JSON data
+        },
+        body: JSON.stringify(dataArray),  // Convert the data array to a JSON string
+    })
+    .then(response => response.json())  // Parse the response as JSON
+    .then(data => {
+        console.log('Data saved to Google Sheet:', data);  // Log the success message from the server
+    })
+    .catch(error => {
+        console.error('Error saving data to Google Sheet:', error);  // Log any errors that occur
+    });
+}
+
+// Example of testing static data
+saveDataToGoogleSheet([100, 200, 300]);  // Test with static data
+
 
            initializeMainPowerChart();
 
