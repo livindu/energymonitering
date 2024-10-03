@@ -139,10 +139,6 @@ function saveDataToGoogleSheet(dataArray) {
     });
 }
 
-// Example of testing static data
-saveDataToGoogleSheet([100, 200, 300]);  // Test with static data
-
-
            initializeMainPowerChart();
 
     function initializeMainPowerChart() {
