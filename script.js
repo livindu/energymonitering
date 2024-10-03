@@ -119,7 +119,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Function to send data to Google Sheet
 function saveDataToGoogleSheet(dataArray) {
-   const apiUrl = 'https://script.google.com/macros/s/AKfycbxx_bzpQemX-iiA9X1LnZVy6IGEM72IxInVZQ_4N_98c7Z6hi51IxYrmoFkxNPqnTNEXA/exec';
+   const apiUrl = 'https://script.google.com/macros/s/AKfycbym4CacuY4NnsUy53hN5AmxEmLCQ8X4KDBUkU9VX4q9iKmRDeRb-uv8U9YaTIDmG5admw/exec';
                 
     console.log('Sending data:', dataArray);  // Debugging line to verify the data being sent
 
