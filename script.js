@@ -88,6 +88,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
             mainPowerData[currentIndex] = power; // Update power at the corresponding hour
 
+
+            saveDataToGoogleSheet(mainPowerData);
+
             // Update the chart data
             mainPowerChart.data.datasets[0].data = mainPowerData;
             mainPowerChart.update();
@@ -111,6 +114,29 @@ document.addEventListener('DOMContentLoaded', function() {
     ws.onerror = function(error) {
         console.error("WebSocket error:", error);
     };
+
+
+
+function saveDataToGoogleSheet(dataArray) {
+        const apiUrl = 'https://script.google.com/macros/s/AKfycbxx_bzpQemX-iiA9X1LnZVy6IGEM72IxInVZQ_4N_98c7Z6hi51IxYrmoFkxNPqnTNEXA/exec';
+                
+        fetch(apiUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(dataArray),
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Data saved to Google Sheet:', data);
+        })
+        .catch(error => {
+            console.error('Error saving data to Google Sheet:', error);
+        });
+    }
+
+           initializeMainPowerChart();
 
     function initializeMainPowerChart() {
         const ctx = document.getElementById('mainPowerChart').getContext('2d');
