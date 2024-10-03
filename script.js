@@ -191,6 +191,8 @@ function saveDataToGoogleSheet(dataArray) {
     // Initialize the main power chart
     initializeMainPowerChart();
 
+    let devicePowerChart;
+    
     function fetchDevicePowerData() {
         const powerDataUrl = `https://docs.google.com/spreadsheets/d/${sheetId}/pub?output=csv`;
 
