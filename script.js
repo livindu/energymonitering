@@ -225,7 +225,7 @@ function saveDataToGoogleSheet(dataArray) {
             .catch(error => console.error('Error fetching power data:', error));
     }
 
-let devicePowerChart = null; // Initialize devicePowerChart as null
+
 
 function updateDevicePowerChart(labels, device0, device1, device2, device3, device4) {
     const ctx = document.getElementById('devicePowerChart').getContext('2d');
