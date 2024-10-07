@@ -20,7 +20,7 @@ loginForm?.addEventListener('submit', function (event) {
 });
 
 document.addEventListener('DOMContentLoaded', function() {
-    const ws = new WebSocket('wss://lucky-shell-honeycrisp.glitch.me/');
+    const ws = new WebSocket('ws://lucky-shell-honeycrisp.glitch.me/');
     let mainPowerChart;
     const mainPowerData = Array(1440).fill(null); // Initialize an array to hold 24 hours of data
     const timeLabels = []; // Store all time labels
@@ -88,9 +88,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
             mainPowerData[currentIndex] = power; // Update power at the corresponding hour
 
-
-            saveDataToGoogleSheet(mainPowerData);
-
             // Update the chart data
             mainPowerChart.data.datasets[0].data = mainPowerData;
             mainPowerChart.update();
@@ -107,43 +104,13 @@ document.addEventListener('DOMContentLoaded', function() {
    ws.onclose = function() {
     console.log("WebSocket connection closed. Reconnecting...");
     setTimeout(function() {
-        ws = new WebSocket('wss://lucky-shell-honeycrisp.glitch.me/');
+        ws = new WebSocket('ws://lucky-shell-honeycrisp.glitch.me/');
     }, 1000); // Reconnect after 1 second
 };
 
     ws.onerror = function(error) {
         console.error("WebSocket error:", error);
     };
-
-
-
-// Function to send data to Google Sheet
-function saveDataToGoogleSheet(dataArray) {
-   const apiUrl = 'https://script.google.com/macros/s/AKfycbxx_bzpQemX-iiA9X1LnZVy6IGEM72IxInVZQ_4N_98c7Z6hi51IxYrmoFkxNPqnTNEXA/exec';
-                
-    console.log('Sending data:', dataArray);  // Debugging line to verify the data being sent
-
-    fetch(apiUrl, {
-        method: 'POST',  // Use POST method to send data
-        headers: {
-            'Content-Type': 'application/json',  // Sending JSON data
-        },
-        body: JSON.stringify(dataArray),  // Convert the data array to a JSON string
-    })
-    .then(response => response.json())  // Parse the response as JSON
-    .then(data => {
-        console.log('Data saved to Google Sheet:', data);  // Log the success message from the server
-    })
-    .catch(error => {
-        console.error('Error saving data to Google Sheet:', error);  // Log any errors that occur
-    });
-}
-
-// Example of testing static data
-saveDataToGoogleSheet([100, 200, 300]);  // Test with static data
-
-
-           initializeMainPowerChart();
 
     function initializeMainPowerChart() {
         const ctx = document.getElementById('mainPowerChart').getContext('2d');
