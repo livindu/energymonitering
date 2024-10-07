@@ -218,7 +218,7 @@ function updateDevicePowerChart(labels, house1Dishw, house3Dishw) {
                     }
                 },
                 y: {
-                    title: { display: true, text: 'PreProssed value' },
+                    title: { display: true, text: 'prepossessed value' },
                     min: 0, // Start y-axis at 0
                     ticks: {
                         stepSize: 1 // Set a step size for better readability of power values
