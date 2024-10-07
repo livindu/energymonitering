@@ -162,43 +162,34 @@ document.addEventListener('DOMContentLoaded', function() {
     // Initialize the main power chart
     initializeMainPowerChart();
 
-    function fetchDevicePowerData() {
-        const powerDataUrl = `https://docs.google.com/spreadsheets/d/${sheetId}/pub?output=csv`;
+function fetchDevicePowerData() {
+    const powerDataUrl = `https://docs.google.com/spreadsheets/d/${sheetId}/pub?output=csv`;
 
-        fetch(powerDataUrl)
-            .then(response => response.text())
-            .then(data => {
-                const rows = data.split('\n').slice(1);
-                const labels = [];
-                const device0 = [];
-                const device1 = [];
-                const device2 = [];
-                const device3 = [];
-                const device4 = [];
+    fetch(powerDataUrl)
+        .then(response => response.text())
+        .then(data => {
+            const rows = data.split('\n').slice(1); // Skip header row
+            const labels = [];
+            const house1Dishw = [];
+            const house3Dishw = [];
 
-                rows.forEach(row => {
-                    const [timeMs, dev0, dev1, dev2, dev3, dev4] = row.split(',');
-                    const time = new Date(parseInt(timeMs));
-                    const hours = time.getUTCHours();
-                    const minutes = time.getUTCMinutes();
-                    const formattedTime = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
+            rows.forEach(row => {
+                const [timestamp, house1, house3] = row.split(',');
+                const time = timestamp.split(' ')[0]; // Extract time from timestamp
+                labels.push(time); // Use time as the label
 
-                    labels.push(formattedTime);
-                    device0.push(parseFloat(dev0));
-                    device1.push(parseFloat(dev1));
-                    device2.push(parseFloat(dev2));
-                    device3.push(parseFloat(dev3));
-                    device4.push(parseFloat(dev4));
-                });
+                house1Dishw.push(parseFloat(house1)); // Push data for House 1 - Dishw
+                house3Dishw.push(parseFloat(house3)); // Push data for House 3 - Dishwasher
+            });
 
-                updateDevicePowerChart(labels, device0, device1, device2, device3, device4);
-            })
-            .catch(error => console.error('Error fetching power data:', error));
-    }
+            updateDevicePowerChart(labels, house1Dishw, house3Dishw);
+        })
+        .catch(error => console.error('Error fetching power data:', error));
+}
 
 let devicePowerChart = null; // Initialize devicePowerChart as null
 
-function updateDevicePowerChart(labels, device0, device1, device2, device3, device4) {
+function updateDevicePowerChart(labels, house1Dishw, house3Dishw) {
     const ctx = document.getElementById('devicePowerChart').getContext('2d');
     
     // Check if the chart exists before destroying it
@@ -211,11 +202,8 @@ function updateDevicePowerChart(labels, device0, device1, device2, device3, devi
         data: {
             labels: labels,
             datasets: [
-                { label: 'Device 0', borderColor: 'rgba(0, 128, 128, 1)', data: device0, fill: false },
-                { label: 'Device 1', borderColor: 'rgba(128, 0, 128, 1)', data: device1, fill: false },
-                { label: 'Device 2', borderColor: 'rgba(0, 128, 0, 1)', data: device2, fill: false },
-                { label: 'Device 3', borderColor: 'rgba(128, 128, 0, 1)', data: device3, fill: false },
-                { label: 'Device 4', borderColor: 'rgba(0, 0, 128, 1)', data: device4, fill: false },
+                { label: 'House 1 - Dishwasher', borderColor: 'rgba(0, 128, 128, 1)', data: house1Dishw, fill: false },
+                { label: 'House 3 - Dishwasher', borderColor: 'rgba(128, 0, 128, 1)', data: house3Dishw, fill: false }
             ]
         },
         options: {
@@ -223,16 +211,24 @@ function updateDevicePowerChart(labels, device0, device1, device2, device3, devi
                 x: {
                     title: { display: true, text: 'Time (24 Hours)' },
                     ticks: {
-                        autoSkip: false
+                        autoSkip: true, // Reduce clutter by auto-skipping some x-axis labels
+                        maxTicksLimit: 20 // Limit the number of x-axis labels shown
                     }
                 },
                 y: {
-                    title: { display: true, text: 'Power (W)' }
+                    title: { display: true, text: 'Power (W)' },
+                    min: 0, // Start y-axis at 0
+                    ticks: {
+                        stepSize: 1 // Set a step size for better readability of power values
+                    }
                 }
-            }
+            },
+            responsive: true,
+            maintainAspectRatio: false // Ensure the graph adjusts to screen size
         }
     });
     console.log('Device power chart updated.');
 }
+
 
 });
