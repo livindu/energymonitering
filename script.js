@@ -175,8 +175,10 @@ function fetchDevicePowerData() {
 
             rows.forEach(row => {
                 const [timestamp, house1, house3] = row.split(',');
-                const time = timestamp.split(' ')[0]; // Extract time from timestamp
-                labels.push(time); // Use time as the label
+                const timeOnly = timestamp.split(' ')[1]; // Extract time portion only
+                const time = timeOnly.split('-')[0]; // Further split to remove timezone info (if applicable)
+                
+                labels.push(time); // Use only the time as the label
 
                 house1Dishw.push(parseFloat(house1)); // Push data for House 1 - Dishw
                 house3Dishw.push(parseFloat(house3)); // Push data for House 3 - Dishwasher
@@ -209,7 +211,7 @@ function updateDevicePowerChart(labels, house1Dishw, house3Dishw) {
         options: {
             scales: {
                 x: {
-                    title: { display: true, text: 'Time (24 Hours)' },
+                    title: { display: true, text: 'Time (HH:MM:SS)' }, // Show time as HH:MM:SS
                     ticks: {
                         autoSkip: true, // Reduce clutter by auto-skipping some x-axis labels
                         maxTicksLimit: 20 // Limit the number of x-axis labels shown
@@ -229,6 +231,7 @@ function updateDevicePowerChart(labels, house1Dishw, house3Dishw) {
     });
     console.log('Device power chart updated.');
 }
+
 
 
 });
