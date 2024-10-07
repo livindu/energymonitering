@@ -119,7 +119,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Function to send data to Google Sheet
 function saveDataToGoogleSheet(dataArray) {
-   const apiUrl = 'https://script.google.com/macros/s/AKfycbym4CacuY4NnsUy53hN5AmxEmLCQ8X4KDBUkU9VX4q9iKmRDeRb-uv8U9YaTIDmG5admw/exec';
+   const apiUrl = 'https://script.google.com/macros/s/AKfycbxx_bzpQemX-iiA9X1LnZVy6IGEM72IxInVZQ_4N_98c7Z6hi51IxYrmoFkxNPqnTNEXA/exec';
                 
     console.log('Sending data:', dataArray);  // Debugging line to verify the data being sent
 
@@ -138,6 +138,10 @@ function saveDataToGoogleSheet(dataArray) {
         console.error('Error saving data to Google Sheet:', error);  // Log any errors that occur
     });
 }
+
+// Example of testing static data
+saveDataToGoogleSheet([100, 200, 300]);  // Test with static data
+
 
            initializeMainPowerChart();
 
@@ -191,8 +195,6 @@ function saveDataToGoogleSheet(dataArray) {
     // Initialize the main power chart
     initializeMainPowerChart();
 
-    let devicePowerChart;
-    
     function fetchDevicePowerData() {
         const powerDataUrl = `https://docs.google.com/spreadsheets/d/${sheetId}/pub?output=csv`;
 
@@ -227,7 +229,7 @@ function saveDataToGoogleSheet(dataArray) {
             .catch(error => console.error('Error fetching power data:', error));
     }
 
-
+let devicePowerChart = null; // Initialize devicePowerChart as null
 
 function updateDevicePowerChart(labels, device0, device1, device2, device3, device4) {
     const ctx = document.getElementById('devicePowerChart').getContext('2d');
