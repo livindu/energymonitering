@@ -20,7 +20,7 @@ loginForm?.addEventListener('submit', function (event) {
 });
 
 document.addEventListener('DOMContentLoaded', function() {
-    const ws = new WebSocket('ws://lucky-shell-honeycrisp.glitch.me/');
+    const ws = new WebSocket('wss://lucky-shell-honeycrisp.glitch.me/');
     let mainPowerChart;
     const mainPowerData = Array(1440).fill(null); // Initialize an array to hold 24 hours of data
     const timeLabels = []; // Store all time labels
@@ -104,7 +104,7 @@ document.addEventListener('DOMContentLoaded', function() {
    ws.onclose = function() {
     console.log("WebSocket connection closed. Reconnecting...");
     setTimeout(function() {
-        ws = new WebSocket('ws://lucky-shell-honeycrisp.glitch.me/');
+        ws = new WebSocket('wss://lucky-shell-honeycrisp.glitch.me/');
     }, 1000); // Reconnect after 1 second
 };
 
