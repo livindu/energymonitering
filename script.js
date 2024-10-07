@@ -232,6 +232,4 @@ function updateDevicePowerChart(labels, house1Dishw, house3Dishw) {
     console.log('Device power chart updated.');
 }
 
-
-
 });
