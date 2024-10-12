@@ -168,32 +168,50 @@ function fetchDevicePowerData() {
     fetch(powerDataUrl)
         .then(response => response.text())
         .then(data => {
-            const rows = data.split('\n').slice(1); // Skip header row
+            const rows = data.split('\n'); 
+            const headerRow = rows[0].split(','); // Extract the header row
             const labels = [];
-            const house1Dishw = [];
-            const house3Dishw = [];
+            const deviceData = {}; // Object to hold data for each device
 
-            rows.forEach(row => {
-                const [timestamp, house1, house3] = row.split(',');
-                const timeOnly = timestamp.split(' ')[1]; // Extract time portion only
-                const time = timeOnly.split('-')[0]; // Further split to remove timezone info (if applicable)
-                
-                labels.push(time); // Use only the time as the label
-
-                house1Dishw.push(parseFloat(house1)); // Push data for House 1 - Dishw
-                house3Dishw.push(parseFloat(house3)); // Push data for House 3 - Dishwasher
+            // Initialize empty arrays for each device based on the headers (skip Timestamp)
+            headerRow.slice(1).forEach((header) => {
+                deviceData[header.trim()] = [];
             });
 
-            updateDevicePowerChart(labels, house1Dishw, house3Dishw);
+            // Process each row (starting from row 2 to skip the header)
+            rows.slice(1).forEach(row => {
+                const columns = row.split(',');
+                const timestamp = columns[0]; // Timestamp is in the first column
+                const timeOnly = timestamp.split(' ')[1]; // Extract time portion only
+                const time = timeOnly.split('-')[0]; // Further split to remove timezone info (if applicable)
+
+                labels.push(time); // Use only the time as the label
+
+                // Populate the device data
+                columns.slice(1).forEach((value, index) => {
+                    const deviceName = headerRow[index + 1].trim(); // Get the corresponding device name from the header
+                    deviceData[deviceName].push(parseFloat(value)); // Push the data for each device
+                });
+            });
+
+            updateDevicePowerChart(labels, deviceData);
         })
         .catch(error => console.error('Error fetching power data:', error));
 }
 
 let devicePowerChart = null; // Initialize devicePowerChart as null
 
-function updateDevicePowerChart(labels, house1Dishw, house3Dishw) {
+function updateDevicePowerChart(labels, deviceData) {
     const ctx = document.getElementById('devicePowerChart').getContext('2d');
-    
+
+    // Prepare datasets for the chart
+    const datasets = Object.keys(deviceData).map((deviceName, index) => ({
+        label: deviceName, // Use dynamic device name from the header
+        borderColor: `rgba(${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, 1)`, // Random color for each device
+        data: deviceData[deviceName], 
+        fill: false
+    }));
+
     // Check if the chart exists before destroying it
     if (devicePowerChart) {
         devicePowerChart.destroy(); 
@@ -203,10 +221,7 @@ function updateDevicePowerChart(labels, house1Dishw, house3Dishw) {
         type: 'line',
         data: {
             labels: labels,
-            datasets: [
-                { label: 'House 1 - Dishwasher', borderColor: 'rgba(0, 128, 128, 1)', data: house1Dishw, fill: false },
-                { label: 'House 3 - Dishwasher', borderColor: 'rgba(128, 0, 128, 1)', data: house3Dishw, fill: false }
-            ]
+            datasets: datasets // Use dynamic datasets for each device
         },
         options: {
             scales: {
@@ -218,7 +233,7 @@ function updateDevicePowerChart(labels, house1Dishw, house3Dishw) {
                     }
                 },
                 y: {
-                    title: { display: true, text: 'prepossessed value' },
+                    title: { display: true, text: 'Preprocessed Value' },
                     min: 0, // Start y-axis at 0
                     ticks: {
                         stepSize: 1 // Set a step size for better readability of power values
