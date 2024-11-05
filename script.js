@@ -42,7 +42,20 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-        // Function to save data with a timestamp
+    // Load data from local storage
+    function loadLocalData() {
+        const savedData = JSON.parse(localStorage.getItem('mainPowerData'));
+        if (savedData) {
+            savedData.forEach((value, index) => {
+                if (value !== null) {
+                    mainPowerData[index] = value; // Load the saved power data
+                }
+            });
+        }
+    }
+
+
+    // Function to save data with a timestamp
 function saveDataWithExpiration(key, value) {
     const data = {
         value: value,
@@ -83,21 +96,6 @@ saveDataWithExpiration(key, value);
 
 // Start periodic check for expired data every hour (3600000 milliseconds)
 startPeriodicExpirationCheck(key, 3600000); // Adjust interval as needed
-
-    // Load data from local storage
-    function loadLocalData() {
-        const savedData = JSON.parse(localStorage.getItem('mainPowerData'));
-        if (savedData) {
-            savedData.forEach((value, index) => {
-                if (value !== null) {
-                    mainPowerData[index] = value; // Load the saved power data
-                }
-            });
-        }
-    }
-
-
-
 
 
     if (mainPowerChartTitle && mainPowerCanvas && devicePowerChartTitle && devicePowerCanvas) {
@@ -271,12 +269,8 @@ function updateDevicePowerChart(labels, deviceData) {
     const datasets = Object.keys(deviceData).map((deviceName, index) => ({
         label: deviceName, // Use dynamic device name from the header
         borderColor: `rgba(${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, 1)`, // Random color for each device
-        backgroundColor: `rgba(255, 255, 255, 0)`, // Transparent background for each line
         data: deviceData[deviceName], 
-        fill: false,
-        borderWidth: 2, // Increase line width
-        pointRadius: 5, // Increase point size
-        lineTension: 0.3 // Smooth out the curves
+        fill: false
     }));
 
     // Check if the chart exists before destroying it
@@ -307,29 +301,12 @@ function updateDevicePowerChart(labels, deviceData) {
                     }
                 }
             },
-            plugins: {
-                legend: {
-                    display: true,
-                    position: 'top'
-                },
-                tooltip: {
-                    mode: 'index', // Show tooltips for all datasets at the hovered index
-                    intersect: false // Allow tooltips to appear when hovering near a point
-                }
-            },
             responsive: true,
-            maintainAspectRatio: false, // Ensure the graph adjusts to screen size
-            elements: {
-                line: {
-                    tension: 0.3 // Add a slight tension to lines for smoother curves
-                },
-                point: {
-                    radius: 5, // Increase the radius of points on the line
-                }
-            }
+            maintainAspectRatio: false // Ensure the graph adjusts to screen size
         }
     });
     console.log('Device power chart updated.');
 }
 
+});
 
