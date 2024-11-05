@@ -42,20 +42,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Load data from local storage
-    function loadLocalData() {
-        const savedData = JSON.parse(localStorage.getItem('mainPowerData'));
-        if (savedData) {
-            savedData.forEach((value, index) => {
-                if (value !== null) {
-                    mainPowerData[index] = value; // Load the saved power data
-                }
-            });
-        }
-    }
-
-
-    // Function to save data with a timestamp
+        // Function to save data with a timestamp
 function saveDataWithExpiration(key, value) {
     const data = {
         value: value,
@@ -96,6 +83,21 @@ saveDataWithExpiration(key, value);
 
 // Start periodic check for expired data every hour (3600000 milliseconds)
 startPeriodicExpirationCheck(key, 3600000); // Adjust interval as needed
+
+    // Load data from local storage
+    function loadLocalData() {
+        const savedData = JSON.parse(localStorage.getItem('mainPowerData'));
+        if (savedData) {
+            savedData.forEach((value, index) => {
+                if (value !== null) {
+                    mainPowerData[index] = value; // Load the saved power data
+                }
+            });
+        }
+    }
+
+
+
 
 
     if (mainPowerChartTitle && mainPowerCanvas && devicePowerChartTitle && devicePowerCanvas) {
