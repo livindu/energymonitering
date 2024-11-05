@@ -54,6 +54,50 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
+
+    // Function to save data with a timestamp
+function saveDataWithExpiration(key, value) {
+    const data = {
+        value: value,
+        timestamp: new Date().getTime() // Current timestamp in milliseconds
+    };
+    localStorage.setItem(key, JSON.stringify(data));
+}
+
+// Function to check for expired data
+function checkForExpiredData(key) {
+    const data = JSON.parse(localStorage.getItem(key));
+
+    if (data) {
+        const currentTime = new Date().getTime();
+        const oneDayInMilliseconds = 24 * 60 * 60 * 1000; // One day in milliseconds
+        
+        // Check if the data is older than one day
+        if (currentTime - data.timestamp > oneDayInMilliseconds) {
+            localStorage.removeItem(key); // Remove expired data
+            console.log(`${key} has been removed from local storage due to expiration.`);
+        }
+    }
+}
+
+// Function to periodically check for expired data
+function startPeriodicExpirationCheck(key, interval) {
+    setInterval(() => {
+        checkForExpiredData(key);
+    }, interval); // Check for expired data every `interval` milliseconds
+}
+
+// Example usage
+const key = 'mainPowerData';
+const value = [/* your power data */];
+
+// Save data
+saveDataWithExpiration(key, value);
+
+// Start periodic check for expired data every hour (3600000 milliseconds)
+startPeriodicExpirationCheck(key, 3600000); // Adjust interval as needed
+
+
     if (mainPowerChartTitle && mainPowerCanvas && devicePowerChartTitle && devicePowerCanvas) {
         mainPowerChartTitle.style.display = 'block';
         mainPowerCanvas.style.display = 'block';
@@ -225,8 +269,12 @@ function updateDevicePowerChart(labels, deviceData) {
     const datasets = Object.keys(deviceData).map((deviceName, index) => ({
         label: deviceName, // Use dynamic device name from the header
         borderColor: `rgba(${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, 1)`, // Random color for each device
+        backgroundColor: `rgba(255, 255, 255, 0)`, // Transparent background for each line
         data: deviceData[deviceName], 
-        fill: false
+        fill: false,
+        borderWidth: 2, // Increase line width
+        pointRadius: 5, // Increase point size
+        lineTension: 0.3 // Smooth out the curves
     }));
 
     // Check if the chart exists before destroying it
@@ -257,12 +305,29 @@ function updateDevicePowerChart(labels, deviceData) {
                     }
                 }
             },
+            plugins: {
+                legend: {
+                    display: true,
+                    position: 'top'
+                },
+                tooltip: {
+                    mode: 'index', // Show tooltips for all datasets at the hovered index
+                    intersect: false // Allow tooltips to appear when hovering near a point
+                }
+            },
             responsive: true,
-            maintainAspectRatio: false // Ensure the graph adjusts to screen size
+            maintainAspectRatio: false, // Ensure the graph adjusts to screen size
+            elements: {
+                line: {
+                    tension: 0.3 // Add a slight tension to lines for smoother curves
+                },
+                point: {
+                    radius: 5, // Increase the radius of points on the line
+                }
+            }
         }
     });
     console.log('Device power chart updated.');
 }
 
-});
 
