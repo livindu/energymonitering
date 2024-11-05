@@ -182,81 +182,89 @@ document.addEventListener('DOMContentLoaded', function() {
     // Initialize the main power chart
     initializeMainPowerChart();
 
-    function fetchDevicePowerData() {
-        const powerDataUrl = `https://docs.google.com/spreadsheets/d/${sheetId}/pub?output=csv`;
+function fetchDevicePowerData() {
+    const powerDataUrl = `https://docs.google.com/spreadsheets/d/${sheetId}/pub?output=csv`;
 
-        fetch(powerDataUrl)
-            .then(response => response.text())
-            .then(data => {
-                const rows = data.split('\n'); 
-                const headerRow = rows[0].split(','); // Extract the header row
-                const labels = [];
-                const deviceData = {}; // Object to hold data for each device
+    fetch(powerDataUrl)
+        .then(response => response.text())
+        .then(data => {
+            const rows = data.split('\n'); 
+            const headerRow = rows[0].split(','); // Extract the header row
+            const labels = [];
+            const deviceData = {}; // Object to hold data for each device
 
-                // Initialize empty arrays for each device based on the headers (skip Timestamp)
-                headerRow.slice(1).forEach((header) => {
-                    deviceData[header.trim()] = [];
+            // Initialize empty arrays for each device based on the headers (skip Timestamp)
+            headerRow.slice(1).forEach((header) => {
+                deviceData[header.trim()] = [];
+            });
+
+            // Process each row (starting from row 2 to skip the header)
+            rows.slice(1).forEach(row => {
+                const columns = row.split(',');
+                const timestamp = columns[0]; // Timestamp is in the first column
+                const timeOnly = timestamp.split(' ')[1]; // Extract time portion only
+                const time = timeOnly.split('-')[0]; // Further split to remove timezone info (if applicable)
+
+                labels.push(time); // Use only the time as the label
+
+                // Populate the device data
+                columns.slice(1).forEach((value, index) => {
+                    const deviceName = headerRow[index + 1].trim(); // Get the corresponding device name from the header
+                    deviceData[deviceName].push(parseFloat(value)); // Push the data for each device
                 });
+            });
 
-                // Process each row (starting from row 2 to skip the header)
-                rows.slice(1).forEach(row => {
-                    const columns = row.split(',');
-                    const timestamp = columns[0]; // Timestamp is in the first column
-                    const timeOnly = timestamp.split(' ')[1]; // Extract time portion only
-                    const time = timeOnly.split('-')[0]; // Further split to remove timezone info (if applicable)
+            updateDevicePowerChart(labels, deviceData);
+        })
+        .catch(error => console.error('Error fetching power data:', error));
+}
 
-                    labels.push(time); // Use only the time as the label
+let devicePowerChart = null; // Initialize devicePowerChart as null
 
-                    // Populate the device data
-                    columns.slice(1).forEach((value, index) => {
-                        const deviceName = headerRow[index + 1].trim(); // Get the corresponding device name from the header
-                        deviceData[deviceName].push(parseFloat(value)); // Push the data for each device
-                    });
-                });
+function updateDevicePowerChart(labels, deviceData) {
+    const ctx = document.getElementById('devicePowerChart').getContext('2d');
 
-                updateDevicePowerChart(labels, deviceData);
-            })
-            .catch(error => console.error('Error fetching power data:', error));
+    // Prepare datasets for the chart
+    const datasets = Object.keys(deviceData).map((deviceName, index) => ({
+        label: deviceName, // Use dynamic device name from the header
+        borderColor: `rgba(${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, 1)`, // Random color for each device
+        data: deviceData[deviceName], 
+        fill: false
+    }));
+
+    // Check if the chart exists before destroying it
+    if (devicePowerChart) {
+        devicePowerChart.destroy(); 
     }
 
-    let devicePowerChart = null; // Initialize devicePowerChart as null
-
-    function updateDevicePowerChart(labels, deviceData) {
-        const ctx = document.getElementById('devicePowerChart').getContext('2d');
-
-        // Clear the previous chart if it exists
-        if (devicePowerChart) {
-            devicePowerChart.destroy();
-        }
-
-        // Create new chart for device power data
-        devicePowerChart = new Chart(ctx, {
-            type: 'bar', // Bar chart type
-            data: {
-                labels: labels,
-                datasets: Object.keys(deviceData).map((deviceName, index) => ({
-                    label: deviceName,
-                    backgroundColor: `rgba(${index * 50}, 99, 132, 0.5)`,
-                    borderColor: `rgba(${index * 50}, 99, 132, 1)`,
-                    borderWidth: 1,
-                    data: deviceData[deviceName] // Assign the corresponding data
-                }))
-            },
-            options: {
-                scales: {
-                    x: {
-                        title: { display: true, text: 'Time' }
-                    },
-                    y: {
-                        title: { display: true, text: 'Power (W)' },
-                        beginAtZero: true
+    devicePowerChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: datasets // Use dynamic datasets for each device
+        },
+        options: {
+            scales: {
+                x: {
+                    title: { display: true, text: 'Time (HH:MM:SS)' }, // Show time as HH:MM:SS
+                    ticks: {
+                        autoSkip: true, // Reduce clutter by auto-skipping some x-axis labels
+                        maxTicksLimit: 20 // Limit the number of x-axis labels shown
                     }
                 },
-                responsive: true,
-                maintainAspectRatio: false
-            }
-        });
+                y: {
+                    title: { display: true, text: 'Power (W)' },
+                    min: 0, // Start y-axis at 0
+                    ticks: {
+                        stepSize: 1 // Set a step size for better readability of power values
+                    }
+                }
+            },
+            responsive: true,
+            maintainAspectRatio: false // Ensure the graph adjusts to screen size
+        }
+    });
+    console.log('Device power chart updated.');
+}
 
-        console.log('Device power chart updated.');
-    }
 });
