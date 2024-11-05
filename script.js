@@ -224,12 +224,23 @@ let devicePowerChart = null; // Initialize devicePowerChart as null
 function updateDevicePowerChart(labels, deviceData) {
     const ctx = document.getElementById('devicePowerChart').getContext('2d');
 
+    // Predefined colors for each device for consistency
+    const colors = [
+        'rgba(75, 192, 192, 1)', // Aqua
+        'rgba(255, 99, 132, 1)', // Pink
+        'rgba(54, 162, 235, 1)', // Blue
+        'rgba(255, 206, 86, 1)', // Yellow
+        'rgba(153, 102, 255, 1)' // Purple
+    ];
+
     // Prepare datasets for the chart
     const datasets = Object.keys(deviceData).map((deviceName, index) => ({
         label: deviceName, // Use dynamic device name from the header
-        borderColor: `rgba(${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, 1)`, // Random color for each device
-        data: deviceData[deviceName], 
-        fill: false
+        borderColor: colors[index % colors.length], // Assign colors consistently
+        data: deviceData[deviceName],
+        fill: false,
+        tension: 0.3, // Enable line smoothing
+        borderWidth: 2 // Increase line width for better visibility
     }));
 
     // Check if the chart exists before destroying it
@@ -261,7 +272,15 @@ function updateDevicePowerChart(labels, deviceData) {
                 }
             },
             responsive: true,
-            maintainAspectRatio: false // Ensure the graph adjusts to screen size
+            maintainAspectRatio: false, // Ensure the graph adjusts to screen size
+            plugins: {
+                legend: {
+                    position: 'top', // Move legend to the top for better visibility
+                    labels: {
+                        usePointStyle: true // Use point style to match color labels
+                    }
+                }
+            }
         }
     });
     console.log('Device power chart updated.');
