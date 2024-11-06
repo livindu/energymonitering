@@ -267,7 +267,7 @@ function updateDevicePowerChart(labels, deviceData) {
                     title: { display: true, text: 'Power (W)' },
                     min: 0, // Start y-axis at 0
                     ticks: {
-                        stepSize: 1 // Set a step size for better readability of power values
+                        stepSize: 0 // Set a step size for better readability of power values
                     }
                 }
             },
