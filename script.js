@@ -240,7 +240,9 @@ function updateDevicePowerChart(labels, deviceData) {
         data: deviceData[deviceName],
         fill: false,
         tension: 0.3, // Enable line smoothing
-        borderWidth: 2 // Increase line width for better visibility
+        borderWidth: 2, // Increase line width for better visibility
+        pointRadius: 0 //
+        
     }));
 
     // Check if the chart exists before destroying it
