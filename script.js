@@ -260,7 +260,7 @@ function updateDevicePowerChart(labels, deviceData) {
                     title: { display: true, text: 'Time (HH:MM:SS)' }, // Show time as HH:MM:SS
                     ticks: {
                         autoSkip: true, // Reduce clutter by auto-skipping some x-axis labels
-                        maxTicksLimit: 20 // Limit the number of x-axis labels shown
+                        maxTicksLimit: 10 // Limit the number of x-axis labels shown
                     }
                 },
                 y: {
