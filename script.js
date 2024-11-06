@@ -147,7 +147,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     borderColor: 'rgba(0, 128, 128, 1)',
                     fill: false,
                     data: mainPowerData.map(value => value !== null ? value : 0), // Replace null with 0
-                    pointRadius: 1, // Size of data points on the line
+                    pointRadius: 0, // Size of data points on the line
                     pointBackgroundColor: 'rgba(0, 128, 128, 1)', // Color of points
                     lineTension: 0.3,
                     borderWidth: 2
