@@ -1,4 +1,4 @@
-/* General page styles */
+/* General page */
 body {
     font-family: Arial, sans-serif;
     margin: 0;
@@ -7,7 +7,7 @@ body {
     color: #333;
 }
 
-/* Header styling */
+/* Header */
 header {
     background-color: #d3d3d3;
     color: black;
@@ -24,7 +24,7 @@ header img {
     height: 120px;
 }
 
-/* Login page styling */
+/* Login page */
 .login-container {
     display: flex;
     justify-content: center;
@@ -56,7 +56,7 @@ header img {
     font-size: 1em;
 }
 
-/* Button styles */
+/* Buttons */
 .login-box button,
 .btn {
     background-color: #32CD32;
@@ -75,14 +75,14 @@ header img {
     background-color: #28a745;
 }
 
-/* Layout for the dashboard */
+/* Dashboard */
 .container {
     display: flex;
     flex-direction: row;
     height: calc(100vh - 100px);
 }
 
-/* Sidebar styling */
+/* Side bar */
 aside {
     width: 200px;
     background-color: #f0f0f0;
@@ -90,16 +90,16 @@ aside {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     display: flex;
     flex-direction: column;
-    align-items: stretch; /* Stretch buttons to full width */
+    align-items: stretch; 
     justify-content: flex-start;
 }
 
 .btn {
-    margin: 10px 0; /* Spacing between buttons */
-    width: auto; /* Remove fixed width for buttons */
+    margin: 10px 0; /* button space */
+    width: auto; 
 }
 
-/* Main content area */
+/* Main content */
 main {
     flex-grow: 1;
     padding: 2em;
@@ -111,7 +111,7 @@ main {
 }
 
 
-/* Chart container styling */
+/* Chart container */
 .chart-container {
     width: 100%;
     max-width: 800px;
@@ -119,22 +119,22 @@ main {
     margin: 0 auto;
     border-radius: 10px;
     padding: 20px;
-    position: relative; /* Positioning for better alignment */
+    position: relative; 
 
 }
 
-/* Check for any unwanted padding/margins */
+
 main {
-    padding-bottom: 0; /* Remove padding at the bottom of the main content */
+    padding-bottom: 0; 
 }
 
-/* Ensure no global styles are affecting the layout */
+
 body {
-    margin: 0; /* Remove default body margin */
+    margin: 0; 
 }
 }
 
-/* Title for charts */
+/* Chart Title */
 .chart-title {
     font-size: 1.5em;
     color: #333;
@@ -142,7 +142,7 @@ body {
     margin-bottom: 15px;
 }
 
-/* Container for Status Box */
+/* Status Box Container */
 .status {
     display: flex;                    
     justify-content: space-around;    
@@ -153,7 +153,7 @@ body {
     box-sizing: border-box;           
 }
 
-/* Styling for Individual Status Box */
+/* Status Box (V, P, C)*/
 .status-box {
     background-color: #1E90FF;        
     color: white;                     
@@ -165,34 +165,32 @@ body {
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-/* Optional: Hover effect for status boxes */
+/* Hover status boxes */
 .status-box:hover {
     background-color: #1C86EE;        
     transform: translateY(-5px);      
     transition: all 0.3s ease;        
 }
 
-/* Responsive Design */
+
 @media (max-width: 768px) {
     .chart-container {
-        height: auto; /* Allow height to adjust for smaller screens */
+        height: auto; 
     }
 
     .login-box {
-        width: 90%; /* Responsive width for the login box */
+        width: 90%; 
     }
 
     header img {
-        width: 100px; /* Smaller logo on mobile */
+        width: 100px; /* logo */
         height: 100px; 
     }
-
     .status {
-        flex-direction: column; /* Stack status boxes on smaller screens */
+        flex-direction: column; /* smaal Stack status boxes */
         align-items: stretch;
     }
-
     .status-box {
-        margin-bottom: 10px; /* Spacing between stacked boxes */
+        margin-bottom: 10px; /* Spacing boxes */
     }
 }
