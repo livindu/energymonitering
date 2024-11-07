@@ -22,8 +22,8 @@ loginForm?.addEventListener('submit', function (event) {
 document.addEventListener('DOMContentLoaded', function() {
     let ws = new WebSocket('wss://lucky-shell-honeycrisp.glitch.me/');
     let mainPowerChart;
-    const mainPowerData = Array(1440).fill(null); // Initialize an array to hold 24 hours of data
-    const timeLabels = []; // Store all time labels
+    const mainPowerData = Array(1440).fill(null); // Start Array data 24 hours
+    const timeLabels = []; // Store time labels
 
     const mainPowerBtn = document.getElementById('mainPowerBtn');
     const devicePowerBtn = document.getElementById('devicePowerBtn');
@@ -32,8 +32,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const mainPowerCanvas = document.getElementById('mainPowerChart');
     const devicePowerCanvas = document.getElementById('devicePowerChart');
 
-    // Function to generate time labels (00:00 to 23:59)
-    function initializeTimeLabels() {
+    
+    function initializeTimeLabels() {   // 24 h time function
         for (let i = 0; i < 24; i++) {
             for (let j = 0; j < 60; j++) {
                 const hourLabel = `${i.toString().padStart(2, '0')}:${j.toString().padStart(2, '0')}`;
@@ -42,21 +42,21 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Load data from local storage
-    function loadLocalData() {
+    
+    function loadLocalData() {   // Load local storage data
         const savedData = JSON.parse(localStorage.getItem('mainPowerData'));
         const lastSavedDate = localStorage.getItem('lastSavedDate');
         const currentDate = new Date().toLocaleDateString();
 
-        // Clear data if the date has changed
-        if (lastSavedDate !== currentDate) {
+        
+        if (lastSavedDate !== currentDate) {  // Clear data 
             localStorage.removeItem('mainPowerData');
             localStorage.setItem('lastSavedDate', currentDate);
-            mainPowerData.fill(null); // Reset array for new day
+            mainPowerData.fill(null); // Reset array 
         } else if (savedData) {
             savedData.forEach((value, index) => {
                 if (value !== null) {
-                    mainPowerData[index] = value; // Load the saved power data
+                    mainPowerData[index] = value; // Load local storage power data
                 }
             });
         }
@@ -91,7 +91,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     ws.onmessage = function(event) {
         const data = JSON.parse(event.data);
-        console.log('Received data:', data); // Log received data for debugging
+        console.log('Received data:', data); 
         const { date, time, voltage, current, power } = data;
 
         document.getElementById('dateDisplay').innerText = date;   
@@ -104,19 +104,19 @@ document.addEventListener('DOMContentLoaded', function() {
         const minutes = parseInt(minutesStr);
 
         if (!isNaN(hours) && !isNaN(minutes)) {
-            const currentIndex = hours * 60 + minutes; // Calculate the index in the 24-hour array
+            const currentIndex = hours * 60 + minutes; // index value for 24-hour array
 
-            mainPowerData[currentIndex] = power; // Update power at the corresponding hour
+            mainPowerData[currentIndex] = power; // Update power and hour
             
             // Save to local storage
             localStorage.setItem('mainPowerData', JSON.stringify(mainPowerData));
-            localStorage.setItem('lastSavedDate', new Date().toLocaleDateString()); // Save the current date
+            localStorage.setItem('lastSavedDate', new Date().toLocaleDateString()); // current date saved
 
             // Update the chart data
             mainPowerChart.data.datasets[0].data = mainPowerData;
             mainPowerChart.update();
         } else {
-            console.error(`Invalid time format received: ${time}`); // Log if hours or minutes are NaN
+            console.error(`Invalid time format received: ${time}`); // time value NaN
         }
     };
 
@@ -124,7 +124,7 @@ document.addEventListener('DOMContentLoaded', function() {
         console.log("WebSocket connection closed. Reconnecting...");
         setTimeout(function() {
             ws = new WebSocket('wss://lucky-shell-honeycrisp.glitch.me/');
-        }, 1000); // Reconnect after 1 second
+        }, 1000); // Reconnection
     };
 
     ws.onerror = function(error) {
@@ -134,22 +134,22 @@ document.addEventListener('DOMContentLoaded', function() {
     function initializeMainPowerChart() {
         const ctx = document.getElementById('mainPowerChart').getContext('2d');
         
-        // Initialize time labels
+        
         initializeTimeLabels();
-        loadLocalData(); // Load data from local storage
+        loadLocalData(); // Load local storage data
 
         mainPowerChart = new Chart(ctx, {
             type: 'line',
             data: {
-                labels: timeLabels, // Fixed time labels for 24 hours
+                labels: timeLabels, // 24h formation
                 datasets: [{
                     label: 'Main Power (W)',
                     borderColor: 'rgba(0, 128, 128, 1)',
                     fill: false,
-                    data: mainPowerData.map(value => value !== null ? value : 0), // Replace null with 0
-                    pointRadius: 0, // Size of data points on the line
-                    pointBackgroundColor: 'rgba(0, 128, 128, 1)', // Color of points
-                    lineTension: 0.4,
+                    data: mainPowerData.map(value => value !== null ? value : 0), 
+                    pointRadius: 0, // line
+                    pointBackgroundColor: 'rgba(0, 128, 128, 1)', 
+                    lineTension: 0.5,
                     borderWidth: 2
                 }]
             },
@@ -158,7 +158,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     x: {
                         title: { display: true, text: 'Time (Hours)' },
                         ticks: {
-                            autoSkip: true, // Ensure no labels are skipped
+                            autoSkip: true, 
                             maxTicksLimit: 12 
                         }
                     },
@@ -167,19 +167,19 @@ document.addEventListener('DOMContentLoaded', function() {
                         max: 1500,
                         title: { display: true, text: 'Power (W)' },
                         ticks: {
-                            stepSize: 100 // Define step size for y-axis ticks
+                            stepSize: 100 
                         }
                     }
                 },
-                responsive: true, // Ensure the chart resizes with the window
-                maintainAspectRatio: false // Allow the chart to fill the container
+                responsive: true, // Auto chart resize
+                maintainAspectRatio: false 
             }
         });
 
         console.log('Main power chart initialized.');
     }
 
-    // Initialize the main power chart
+    // Main power chart
     initializeMainPowerChart();
 
 function fetchDevicePowerData() {
@@ -189,28 +189,28 @@ function fetchDevicePowerData() {
         .then(response => response.text())
         .then(data => {
             const rows = data.split('\n'); 
-            const headerRow = rows[0].split(','); // Extract the header row
+            const headerRow = rows[0].split(','); 
             const labels = [];
-            const deviceData = {}; // Object to hold data for each device
+            const deviceData = {}; // Hold device power data
 
-            // Initialize empty arrays for each device based on the headers (skip Timestamp)
-            headerRow.slice(1).forEach((header) => {
+            // Initialize empty arrays for each device 
+            headerRow.slice(1).forEach((header) => { // select header
                 deviceData[header.trim()] = [];
             });
 
-            // Process each row (starting from row 2 to skip the header)
+            // select row 
             rows.slice(1).forEach(row => {
                 const columns = row.split(',');
-                const timestamp = columns[0]; // Timestamp is in the first column
-                const timeOnly = timestamp.split(' ')[1]; // Extract time portion only
-                const time = timeOnly.split('-')[0]; // Further split to remove timezone info (if applicable)
+                const timestamp = columns[0]; // Timestamp 
+                const timeOnly = timestamp.split(' ')[1]; 
+                const time = timeOnly.split('-')[0]; // split 
 
-                labels.push(time); // Use only the time as the label
+                labels.push(time); 
 
-                // Populate the device data
+                
                 columns.slice(1).forEach((value, index) => {
-                    const deviceName = headerRow[index + 1].trim(); // Get the corresponding device name from the header
-                    deviceData[deviceName].push(parseFloat(value)); // Push the data for each device
+                    const deviceName = headerRow[index + 1].trim(); // Device name 
+                    deviceData[deviceName].push(parseFloat(value)); // Push device data 
                 });
             });
 
@@ -219,12 +219,12 @@ function fetchDevicePowerData() {
         .catch(error => console.error('Error fetching power data:', error));
 }
 
-let devicePowerChart = null; // Initialize devicePowerChart as null
+let devicePowerChart = null; 
 
 function updateDevicePowerChart(labels, deviceData) {
     const ctx = document.getElementById('devicePowerChart').getContext('2d');
 
-    // Predefined colors for each device for consistency
+    // Device color setting 
     const colors = [
         'rgba(75, 192, 192, 1)', // Aqua
         'rgba(255, 99, 132, 1)', // Pink
@@ -233,19 +233,19 @@ function updateDevicePowerChart(labels, deviceData) {
         'rgba(153, 102, 255, 1)' // Purple
     ];
 
-    // Prepare datasets for the chart
+    // data
     const datasets = Object.keys(deviceData).map((deviceName, index) => ({
-        label: deviceName, // Use dynamic device name from the header
-        borderColor: colors[index % colors.length], // Assign colors consistently
+        label: deviceName, // Header name
+        borderColor: colors[index % colors.length], // Assign color
         data: deviceData[deviceName],
         fill: false,
-        tension: 0.3, // Enable line smoothing
-        borderWidth: 2, // Increase line width for better visibility
-        pointRadius: 0 //
+        tension: 0.3, 
+        borderWidth: 2, 
+        pointRadius: 0
         
     }));
 
-    // Check if the chart exists before destroying it
+    
     if (devicePowerChart) {
         devicePowerChart.destroy(); 
     }
@@ -254,32 +254,32 @@ function updateDevicePowerChart(labels, deviceData) {
         type: 'line',
         data: {
             labels: labels,
-            datasets: datasets // Use dynamic datasets for each device
+            datasets: datasets 
         },
         options: {
             scales: {
                 x: {
-                    title: { display: true, text: 'Time (HH:MM:SS)' }, // Show time as HH:MM:SS
+                    title: { display: true, text: 'Time (HH:MM:SS)' }, // HH:MM:SS
                     ticks: {
-                        autoSkip: true, // Reduce clutter by auto-skipping some x-axis labels
-                        maxTicksLimit: 10 // Limit the number of x-axis labels shown
+                        autoSkip: true, 
+                        maxTicksLimit: 10 
                     }
                 },
                 y: {
                     title: { display: true, text: 'Power (W)' },
-                    min: 0, // Start y-axis at 0
+                    min: 0, 
                     ticks: {
-                        stepSize: 0 // Set a step size for better readability of power values
+                        stepSize: 1
                     }
                 }
             },
             responsive: true,
-            maintainAspectRatio: false, // Ensure the graph adjusts to screen size
+            maintainAspectRatio: false, // Auto chart resize
             plugins: {
                 legend: {
-                    position: 'top', // Move legend to the top for better visibility
+                    position: 'top', 
                     labels: {
-                        usePointStyle: true // Use point style to match color labels
+                        usePointStyle: true 
                     }
                 }
             }
