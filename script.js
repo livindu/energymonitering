@@ -149,7 +149,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     data: mainPowerData.map(value => value !== null ? value : 0), 
                     pointRadius: 0, // line
                     pointBackgroundColor: 'rgba(0, 128, 128, 1)', 
-                    lineTension: 0.7,
+                    lineTension: 1,
                     borderWidth: 2
                 }]
             },
