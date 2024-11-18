@@ -89,36 +89,42 @@ document.addEventListener('DOMContentLoaded', function() {
         console.log("WebSocket connection established.");
     };
 
-    ws.onmessage = function(event) {
-        const data = JSON.parse(event.data);
-        console.log('Received data:', data); 
-        const { date, time, voltage, current, power } = data;
+   ws.onmessage = function(event) {
+    const data = JSON.parse(event.data);
+    console.log('Received data:', data);
+    const { date, time, voltage, current, power } = data;
 
-        document.getElementById('dateDisplay').innerText = date;   
-        document.getElementById('voltage').innerText = `${voltage} V`;
-        document.getElementById('current').innerText = `${current} A`;
-        document.getElementById('power').innerText = `${power} W`;
+    document.getElementById('dateDisplay').innerText = date;
+    document.getElementById('voltage').innerText = `${voltage} V`;
+    document.getElementById('current').innerText = `${current} A`;
+    document.getElementById('power').innerText = `${power} W`;
 
-        const [hoursStr, minutesStr] = time.split(':');
-        const hours = parseInt(hoursStr);
-        const minutes = parseInt(minutesStr);
+    const [hoursStr, minutesStr] = time.split(':');
+    const hours = parseInt(hoursStr);
+    const minutes = parseInt(minutesStr);
 
-        if (!isNaN(hours) && !isNaN(minutes)) {
-            const currentIndex = hours * 60 + minutes; // index value for 24-hour array
+    if (!isNaN(hours) && !isNaN(minutes)) {
+        
+        const espDate = new Date(`${date}T${hoursStr}:${minutesStr}:00Z`); 
+        const localDate = new Date(espDate.getTime() - espDate.getTimezoneOffset() * 60000); 
+        const localHours = localDate.getHours();
+        const localMinutes = localDate.getMinutes();
 
-            mainPowerData[currentIndex] = power; // Update power and hour
-            
-            // Save to local storage
-            localStorage.setItem('mainPowerData', JSON.stringify(mainPowerData));
-            localStorage.setItem('lastSavedDate', new Date().toLocaleDateString()); // current date saved
+        const currentIndex = localHours * 60 + localMinutes;
 
-            // Update the chart data
-            mainPowerChart.data.datasets[0].data = mainPowerData;
-            mainPowerChart.update();
-        } else {
-            console.error(`Invalid time format received: ${time}`); // time value NaN
-        }
-    };
+        mainPowerData[currentIndex] = power; 
+        
+       
+        localStorage.setItem('mainPowerData', JSON.stringify(mainPowerData));
+        localStorage.setItem('lastSavedDate', new Date().toLocaleDateString());
+
+      
+        mainPowerChart.data.datasets[0].data = mainPowerData;
+        mainPowerChart.update();
+    } else {
+        console.error(`Invalid time format received: ${time}`);
+    }
+};
 
     ws.onclose = function() {
         console.log("WebSocket connection closed. Reconnecting...");
