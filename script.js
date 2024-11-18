@@ -89,7 +89,7 @@ document.addEventListener('DOMContentLoaded', function() {
         console.log("WebSocket connection established.");
     };
 
-   ws.onmessage = function(event) {
+ws.onmessage = function(event) {
     const data = JSON.parse(event.data);
     console.log('Received data:', data);
     const { date, time, voltage, current, power } = data;
@@ -99,26 +99,31 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('current').innerText = `${current} A`;
     document.getElementById('power').innerText = `${power} W`;
 
+    // Parse ESP32 time
     const [hoursStr, minutesStr] = time.split(':');
-    const hours = parseInt(hoursStr);
-    const minutes = parseInt(minutesStr);
+    const hours = parseInt(hoursStr, 10);
+    const minutes = parseInt(minutesStr, 10);
 
     if (!isNaN(hours) && !isNaN(minutes)) {
+        // Combine ESP32 date and time into a Date object
+        const espDateTime = new Date(`${date}T${hoursStr}:${minutesStr}:00Z`);
         
-        const espDate = new Date(`${date}T${hoursStr}:${minutesStr}:00Z`); 
-        const localDate = new Date(espDate.getTime() - espDate.getTimezoneOffset() * 60000); 
-        const localHours = localDate.getHours();
-        const localMinutes = localDate.getMinutes();
+        // Convert to local timezone
+        const localDateTime = new Date(espDateTime.getTime() - espDateTime.getTimezoneOffset() * 60000);
+        const localHours = localDateTime.getHours();
+        const localMinutes = localDateTime.getMinutes();
 
+        // Calculate index for the chart based on the local time
         const currentIndex = localHours * 60 + localMinutes;
 
-        mainPowerData[currentIndex] = power; 
-        
-       
+        // Update the main power data array
+        mainPowerData[currentIndex] = power;
+
+        // Save data to localStorage
         localStorage.setItem('mainPowerData', JSON.stringify(mainPowerData));
         localStorage.setItem('lastSavedDate', new Date().toLocaleDateString());
 
-      
+        // Update the chart
         mainPowerChart.data.datasets[0].data = mainPowerData;
         mainPowerChart.update();
     } else {
