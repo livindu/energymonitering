@@ -89,47 +89,36 @@ document.addEventListener('DOMContentLoaded', function() {
         console.log("WebSocket connection established.");
     };
 
-ws.onmessage = function(event) {
-    const data = JSON.parse(event.data);
-    console.log('Received data:', data);
-    const { date, time, voltage, current, power } = data;
+    ws.onmessage = function(event) {
+        const data = JSON.parse(event.data);
+        console.log('Received data:', data); 
+        const { date, time, voltage, current, power } = data;
 
-    document.getElementById('dateDisplay').innerText = date;
-    document.getElementById('voltage').innerText = `${voltage} V`;
-    document.getElementById('current').innerText = `${current} A`;
-    document.getElementById('power').innerText = `${power} W`;
+        document.getElementById('dateDisplay').innerText = date;   
+        document.getElementById('voltage').innerText = `${voltage} V`;
+        document.getElementById('current').innerText = `${current} A`;
+        document.getElementById('power').innerText = `${power} W`;
 
-    // Parse ESP32 time
-    const [hoursStr, minutesStr] = time.split(':');
-    const hours = parseInt(hoursStr, 10);
-    const minutes = parseInt(minutesStr, 10);
+        const [hoursStr, minutesStr] = time.split(':');
+        const hours = parseInt(hoursStr);
+        const minutes = parseInt(minutesStr);
 
-    if (!isNaN(hours) && !isNaN(minutes)) {
-        // Combine ESP32 date and time into a Date object
-        const espDateTime = new Date(`${date}T${hoursStr}:${minutesStr}:00Z`);
-        
-        // Convert to local timezone
-        const localDateTime = new Date(espDateTime.getTime() - espDateTime.getTimezoneOffset() * 60000);
-        const localHours = localDateTime.getHours();
-        const localMinutes = localDateTime.getMinutes();
+        if (!isNaN(hours) && !isNaN(minutes)) {
+            const currentIndex = hours * 60 + minutes; // index value for 24-hour array
 
-        // Calculate index for the chart based on the local time
-        const currentIndex = localHours * 60 + localMinutes;
+            mainPowerData[currentIndex] = power; // Update power and hour
+            
+            // Save to local storage
+            localStorage.setItem('mainPowerData', JSON.stringify(mainPowerData));
+            localStorage.setItem('lastSavedDate', new Date().toLocaleDateString()); // current date saved
 
-        // Update the main power data array
-        mainPowerData[currentIndex] = power;
-
-        // Save data to localStorage
-        localStorage.setItem('mainPowerData', JSON.stringify(mainPowerData));
-        localStorage.setItem('lastSavedDate', new Date().toLocaleDateString());
-
-        // Update the chart
-        mainPowerChart.data.datasets[0].data = mainPowerData;
-        mainPowerChart.update();
-    } else {
-        console.error(`Invalid time format received: ${time}`);
-    }
-};
+            // Update the chart data
+            mainPowerChart.data.datasets[0].data = mainPowerData;
+            mainPowerChart.update();
+        } else {
+            console.error(`Invalid time format received: ${time}`); // time value NaN
+        }
+    };
 
     ws.onclose = function() {
         console.log("WebSocket connection closed. Reconnecting...");
@@ -160,7 +149,7 @@ ws.onmessage = function(event) {
                     data: mainPowerData.map(value => value !== null ? value : 0), 
                     pointRadius: 0, // line
                     pointBackgroundColor: 'rgba(0, 128, 128, 1)', 
-                    lineTension: 1,
+                    lineTension: 0.5,
                     borderWidth: 2
                 }]
             },
