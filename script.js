@@ -266,10 +266,11 @@ function updateDevicePowerChart(labels, deviceData) {
                     }
                 },
                 y: {
-                    title: { display: true, text: 'Power (W)' },
                     min: 0, 
+                    max: 1500,
+                    title: { display: true, text: 'Power (W)' },
                     ticks: {
-                        stepSize: 1
+                        stepSize: 100
                     }
                 }
             },
